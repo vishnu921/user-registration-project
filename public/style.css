@@ -1,0 +1,7 @@
+.form {
+    display: flex;
+    justify-content: space-around;
+}
+input {
+    margin: 20px 40px 20px 0px;
+}

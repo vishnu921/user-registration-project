@@ -33,6 +33,38 @@ app.get('/signup', (req, res) => {
     res.render('signup');
 });
 
+app.post('/login', async (req, res) => {
+    try {
+        const email = req.body.email;
+        const password = req.body.password;
+        const loginUser = await User.findOne({ email: email});
+        
+        if(!loginUser){
+            res.status(400).send("<h1> Invalid Email </h1>")
+            return;
+        }
+
+        const checkPassword = await bcrypt.compare(password, loginUser.password);
+
+        
+        const token = await loginUser.generateToken();
+
+        res.cookie("jwt", token, {
+            expires: new Date(Date.now() + 500000),
+            httpOnly: true
+        });
+
+        if(checkPassword == true){
+            res.render("welcome", {name: loginUser.name});
+        } else{
+            res.status(400).send("<h1> Invalid Password </h1>")
+        }
+
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 app.post('/signup', async (req,res) => {
     try {
         const password = req.body.password;
@@ -56,7 +88,7 @@ app.post('/signup', async (req,res) => {
 
             const addResult = await newUser.save();
             res.send(addResult);
-            
+
         }
         
     } catch (err) {
