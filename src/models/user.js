@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+// Schema for user information
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -39,6 +40,7 @@ const userSchema = new mongoose.Schema({
     ]
 });
 
+// method to generate jwt token using unique ids of the user
 userSchema.methods.generateToken = async function(){
     try {
         const token = jwt.sign({_id: this._id.toString()}, "helloworldhowareyoudoingiamfine");
@@ -52,6 +54,7 @@ userSchema.methods.generateToken = async function(){
     }
 }
 
+// hashed password before adding to the database
 userSchema.pre("save", async function(next) {
     this.password  = await bcrypt.hash(this.password, 10);
     next();

@@ -17,6 +17,7 @@ router.get('/signup', (req, res) => {
     res.render('signup');
 });
 
+// login using email and password
 router.post('/login', async (req, res) => {
     try {
         const email = req.body.email;
@@ -49,6 +50,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Add a user
 router.post('/signup', async (req,res) => {
     try {
         const password = req.body.password;
@@ -63,7 +65,7 @@ router.post('/signup', async (req,res) => {
                 password: req.body.password
             });
 
-            const token = await newUser.generateToken();
+            const token = await newUser.generateToken();           // create a token
 
             res.cookie("jwt", token, {
                 expires: new Date(Date.now() + 600000),
@@ -79,7 +81,7 @@ router.post('/signup', async (req,res) => {
     }
 });
 
-
+// logout and remove jwt token from client side
 router.get('/logout', (req, res) => {
     try {
         res.clearCookie("jwt");
